@@ -4,17 +4,17 @@ var router = express.Router();
 var burger = require('../models/burger.js');
 
 router.get("/", function(req, res) {
-  burger.selectAll(function(data) {
+  burger.all(function(data) {
     var hbsObject = {
       burgers: data
     };
-    console.log(hbsObject);
     res.render("index", hbsObject);
   });
 });
 
 router.post("/", function(req, res) {
-  burger.insertOne([
+    console.log(req.body)
+  burger.create([
     "burger_name", "devour"
   ], [
     req.body.name, req.body.devour
@@ -28,9 +28,17 @@ router.put("/:id", function(req, res) {
 
   console.log("condition", condition);
 
-  burger.updateOne({
+  burger.update({
     devour: req.body.devour
   }, condition, function() {
+    res.redirect("/");
+  });
+});
+
+router.delete("/:id", function(req, res) {
+  var condition = "id = " + req.params.id;
+
+  burger.delete(condition, function() {
     res.redirect("/");
   });
 });
